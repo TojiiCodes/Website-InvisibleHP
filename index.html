@@ -1,0 +1,1082 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>InvisibleHP – Gaming ohne Limits</title>
+  <meta name="description" content="Eine Community für chronisch kranke, neurodivergente und psychisch eingeschränkte Gamer. Von MrTojii."/>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Crimson+Pro:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg: #080810;
+      --surface: #0f0f1c;
+      --card: #13131f;
+      --hp-red: #e8354a;
+      --hp-empty: #2a1a1e;
+      --teal: #2dd4bf;
+      --gold: #f0a500;
+      --text: #ede8f5;
+      --muted: #7a7494;
+      --border: rgba(255,255,255,0.07);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Crimson Pro', Georgia, serif;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    /* === ANIMATED HP BAR BACKGROUND === */
+    .hp-bg {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: var(--hp-empty);
+      z-index: 200;
+    }
+    .hp-bg-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--hp-red), var(--gold));
+      width: 0%;
+      transition: width 0.1s linear;
+    }
+
+    /* === PARTICLES === */
+    .particles {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+    .particle {
+      position: absolute;
+      width: 2px; height: 2px;
+      background: var(--teal);
+      border-radius: 50%;
+      opacity: 0;
+      animation: float-up linear infinite;
+    }
+    @keyframes float-up {
+      0% { opacity: 0; transform: translateY(0) scale(1); }
+      10% { opacity: 0.6; }
+      90% { opacity: 0.2; }
+      100% { opacity: 0; transform: translateY(-100vh) scale(0.3); }
+    }
+
+    /* === NAV === */
+    nav {
+      position: fixed;
+      top: 3px; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.2rem 3rem;
+      background: rgba(8,8,16,0.85);
+      backdrop-filter: blur(24px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .logo-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      text-decoration: none;
+    }
+
+    .logo-hp {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+    .hp-bar-mini {
+      width: 36px;
+      height: 5px;
+      background: var(--hp-empty);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .hp-bar-mini-fill {
+      height: 100%;
+      border-radius: 2px;
+      background: var(--hp-red);
+      animation: hp-drain 4s ease-in-out infinite alternate;
+    }
+    @keyframes hp-drain {
+      0% { width: 100%; }
+      100% { width: 35%; }
+    }
+
+    .logo-text {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 1.3rem;
+      letter-spacing: -0.02em;
+      color: var(--text);
+    }
+    .logo-text span { color: var(--hp-red); }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 2.5rem;
+      list-style: none;
+    }
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-family: 'Syne', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 400;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--text); }
+
+    .nav-twitch {
+      background: #9147ff;
+      color: #fff !important;
+      padding: 0.45rem 1.2rem;
+      border-radius: 3px;
+      transition: opacity 0.2s !important;
+    }
+    .nav-twitch:hover { opacity: 0.85; }
+
+    /* === HERO === */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      position: relative;
+      padding: 7rem 3rem 4rem;
+      overflow: hidden;
+    }
+
+    .hero-grid-bg {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(232,53,74,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(232,53,74,0.04) 1px, transparent 1px);
+      background-size: 80px 80px;
+      mask-image: radial-gradient(ellipse 70% 80% at 30% 50%, black, transparent);
+    }
+
+    .hero-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      pointer-events: none;
+    }
+    .orb1 {
+      width: 500px; height: 500px;
+      background: rgba(232,53,74,0.08);
+      top: -100px; left: -100px;
+    }
+    .orb2 {
+      width: 400px; height: 400px;
+      background: rgba(45,212,191,0.06);
+      bottom: 0; right: 10%;
+    }
+
+    .hero-inner {
+      position: relative;
+      max-width: 1200px;
+      margin: 0 auto;
+      width: 100%;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: center;
+    }
+
+    .hero-left {}
+
+    .hero-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-family: 'Syne', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--teal);
+      margin-bottom: 1.8rem;
+      animation: fadeUp 1s ease both;
+    }
+    .hero-tag::before {
+      content: '';
+      display: block;
+      width: 20px; height: 1px;
+      background: var(--teal);
+    }
+
+    h1 {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: clamp(3rem, 6vw, 5.5rem);
+      line-height: 1;
+      letter-spacing: -0.03em;
+      margin-bottom: 1.5rem;
+      animation: fadeUp 1s 0.1s ease both;
+    }
+    h1 .word-invisible { color: var(--text); display: block; }
+    h1 .word-hp {
+      color: var(--hp-red);
+      display: block;
+      position: relative;
+    }
+
+    /* HP bar under the HP text */
+    .title-hp-bar {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      margin-bottom: 2rem;
+      animation: fadeUp 1s 0.2s ease both;
+    }
+    .title-hp-track {
+      flex: 1;
+      max-width: 280px;
+      height: 8px;
+      background: var(--hp-empty);
+      border-radius: 2px;
+      overflow: hidden;
+      border: 1px solid rgba(232,53,74,0.3);
+    }
+    .title-hp-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--hp-red), var(--gold));
+      border-radius: 2px;
+      animation: hp-drain-hero 5s ease-in-out infinite alternate;
+    }
+    @keyframes hp-drain-hero {
+      0% { width: 82%; }
+      100% { width: 28%; }
+    }
+    .title-hp-label {
+      font-family: 'Syne', sans-serif;
+      font-size: 0.72rem;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+    }
+
+    .hero-desc {
+      font-size: 1.2rem;
+      font-weight: 300;
+      line-height: 1.75;
+      color: rgba(237,232,245,0.7);
+      max-width: 440px;
+      margin-bottom: 2.5rem;
+      font-style: italic;
+      animation: fadeUp 1s 0.3s ease both;
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      animation: fadeUp 1s 0.4s ease both;
+    }
+
+    .btn-red {
+      background: var(--hp-red);
+      color: #fff;
+      padding: 0.85rem 2rem;
+      border-radius: 3px;
+      text-decoration: none;
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 0.85rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      transition: all 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+    .btn-red:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(232,53,74,0.4);
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--text);
+      padding: 0.85rem 2rem;
+      border-radius: 3px;
+      text-decoration: none;
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 0.85rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      border: 1px solid var(--border);
+      transition: all 0.2s;
+    }
+    .btn-outline:hover {
+      border-color: var(--teal);
+      color: var(--teal);
+    }
+
+    /* === HERO RIGHT – HP CARD === */
+    .hero-right {
+      animation: fadeUp 1s 0.2s ease both;
+    }
+
+    .hp-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .hp-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--hp-red), transparent);
+    }
+
+    .hp-card-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 1.5rem;
+    }
+
+    .hp-stat {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-bottom: 1.2rem;
+    }
+    .hp-stat-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .hp-stat-name {
+      font-family: 'Syne', sans-serif;
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+    }
+    .hp-stat-val {
+      font-family: 'Syne', sans-serif;
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+    .hp-track {
+      height: 6px;
+      background: rgba(255,255,255,0.06);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .hp-fill {
+      height: 100%;
+      border-radius: 2px;
+      animation: reveal-bar 2s ease both;
+    }
+    @keyframes reveal-bar { from { width: 0 !important; } }
+
+    .hp-fill.energy    { background: var(--hp-red); width: 30%; animation-delay: 0.5s; }
+    .hp-fill.community { background: var(--teal); width: 78%; animation-delay: 0.7s; }
+    .hp-fill.passion   { background: var(--gold); width: 95%; animation-delay: 0.9s; }
+    .hp-fill.knowledge { background: #a78bfa; width: 85%; animation-delay: 1.1s; }
+
+    .hp-card-footer {
+      margin-top: 1.5rem;
+      padding-top: 1.2rem;
+      border-top: 1px solid var(--border);
+      font-size: 0.9rem;
+      font-style: italic;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+    .hp-card-footer strong {
+      color: var(--teal);
+      font-style: normal;
+      font-family: 'Syne', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 700;
+    }
+
+    /* === ABOUT === */
+    .about {
+      padding: 7rem 3rem;
+      position: relative;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .section-eyebrow {
+      font-family: 'Syne', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--hp-red);
+      margin-bottom: 1rem;
+    }
+
+    .section-title {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      margin-bottom: 1.5rem;
+    }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+      align-items: start;
+      margin-top: 3rem;
+    }
+
+    .about-text p {
+      font-size: 1.1rem;
+      font-weight: 300;
+      line-height: 1.85;
+      color: rgba(237,232,245,0.75);
+      margin-bottom: 1.2rem;
+    }
+    .about-text p strong {
+      color: var(--text);
+      font-weight: 400;
+    }
+
+    .conditions-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+    }
+
+    .condition-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem 1.2rem;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .condition-item:hover {
+      border-color: rgba(232,53,74,0.3);
+      transform: translateX(4px);
+    }
+    .condition-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .condition-name {
+      font-family: 'Syne', sans-serif;
+      font-size: 0.88rem;
+      font-weight: 700;
+    }
+    .condition-desc {
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-left: auto;
+      font-style: italic;
+    }
+
+    /* === PILLARS === */
+    .pillars {
+      padding: 5rem 3rem;
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .pillars-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .pillars-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      margin-top: 3rem;
+    }
+
+    .pillar-card {
+      padding: 2rem;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: var(--card);
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.3s, border-color 0.3s;
+    }
+    .pillar-card:hover {
+      transform: translateY(-4px);
+    }
+    .pillar-card::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 2px;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .pillar-card:hover::after { opacity: 1; }
+    .pillar-card.red::after { background: var(--hp-red); }
+    .pillar-card.teal::after { background: var(--teal); }
+    .pillar-card.gold::after { background: var(--gold); }
+
+    .pillar-number {
+      font-family: 'Syne', sans-serif;
+      font-size: 3rem;
+      font-weight: 800;
+      opacity: 0.08;
+      line-height: 1;
+      margin-bottom: 1rem;
+    }
+    .pillar-card.red .pillar-number { color: var(--hp-red); }
+    .pillar-card.teal .pillar-number { color: var(--teal); }
+    .pillar-card.gold .pillar-number { color: var(--gold); }
+
+    .pillar-title {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 1.1rem;
+      margin-bottom: 0.8rem;
+    }
+    .pillar-desc {
+      font-size: 0.95rem;
+      font-weight: 300;
+      line-height: 1.7;
+      color: rgba(237,232,245,0.65);
+    }
+
+    /* === MISTER TOJII === */
+    .tojii-section {
+      padding: 7rem 3rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .tojii-inner {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 5rem;
+      align-items: center;
+    }
+
+    .tojii-avatar-wrap {
+      position: relative;
+    }
+    .tojii-avatar-ring {
+      width: 220px; height: 220px;
+      border-radius: 50%;
+      border: 2px solid rgba(232,53,74,0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      animation: rotate-ring 20s linear infinite;
+    }
+    @keyframes rotate-ring {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    .tojii-avatar-ring::before {
+      content: '';
+      position: absolute;
+      inset: 8px;
+      border-radius: 50%;
+      border: 1px solid rgba(45,212,191,0.2);
+    }
+    .tojii-avatar-inner {
+      width: 160px; height: 160px;
+      border-radius: 50%;
+      background: var(--card);
+      border: 2px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 5rem;
+      animation: rotate-ring 20s linear infinite reverse;
+    }
+
+    .tojii-name {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 2.2rem;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.3rem;
+    }
+    .tojii-handle {
+      font-family: 'Syne', sans-serif;
+      font-size: 0.85rem;
+      color: var(--hp-red);
+      letter-spacing: 0.1em;
+      margin-bottom: 1.5rem;
+    }
+    .tojii-bio {
+      font-size: 1.05rem;
+      font-weight: 300;
+      line-height: 1.8;
+      color: rgba(237,232,245,0.7);
+      font-style: italic;
+      margin-bottom: 1.5rem;
+    }
+    .tojii-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+    }
+    .tag {
+      font-family: 'Syne', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.35rem 0.8rem;
+      border-radius: 3px;
+      border: 1px solid;
+    }
+    .tag.red { color: var(--hp-red); border-color: rgba(232,53,74,0.3); background: rgba(232,53,74,0.06); }
+    .tag.teal { color: var(--teal); border-color: rgba(45,212,191,0.3); background: rgba(45,212,191,0.06); }
+    .tag.gold { color: var(--gold); border-color: rgba(240,165,0,0.3); background: rgba(240,165,0,0.06); }
+    .tag.purple { color: #a78bfa; border-color: rgba(167,139,250,0.3); background: rgba(167,139,250,0.06); }
+
+    /* === LINKS / CTA === */
+    .links-section {
+      padding: 6rem 3rem;
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+    }
+    .links-inner {
+      max-width: 600px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .links-inner .section-title { margin-bottom: 0.5rem; }
+    .links-inner p {
+      font-size: 1.05rem;
+      font-style: italic;
+      color: var(--muted);
+      margin-bottom: 2.5rem;
+      font-weight: 300;
+    }
+
+    .link-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+    }
+
+    .link-btn {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem 1.5rem;
+      border-radius: 8px;
+      text-decoration: none;
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: var(--text);
+      font-family: 'Syne', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      transition: all 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+    .link-btn:hover {
+      transform: translateY(-2px);
+    }
+    .link-btn.twitch:hover { border-color: #9147ff; box-shadow: 0 4px 20px rgba(145,71,255,0.2); }
+    .link-btn.discord:hover { border-color: #5865F2; box-shadow: 0 4px 20px rgba(88,101,242,0.2); }
+    .link-btn.tiktok:hover { border-color: var(--teal); box-shadow: 0 4px 20px rgba(45,212,191,0.2); }
+
+    .link-btn-icon {
+      width: 36px; height: 36px;
+      border-radius: 6px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+    .link-btn.twitch .link-btn-icon { background: rgba(145,71,255,0.15); }
+    .link-btn.discord .link-btn-icon { background: rgba(88,101,242,0.15); }
+    .link-btn.tiktok .link-btn-icon { background: rgba(45,212,191,0.15); }
+
+    .link-btn-arrow {
+      margin-left: auto;
+      color: var(--muted);
+      font-size: 1rem;
+      transition: transform 0.2s, color 0.2s;
+    }
+    .link-btn:hover .link-btn-arrow {
+      transform: translateX(4px);
+      color: var(--text);
+    }
+
+    /* === FOOTER === */
+    footer {
+      padding: 2rem 3rem;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .footer-logo {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 1rem;
+      color: var(--text);
+    }
+    .footer-logo span { color: var(--hp-red); }
+
+    .footer-text {
+      font-size: 0.85rem;
+      font-style: italic;
+      color: var(--muted);
+    }
+
+    .footer-hp {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: 'Syne', sans-serif;
+      font-size: 0.72rem;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+    }
+    .footer-hp-bar {
+      width: 60px; height: 4px;
+      background: var(--hp-empty);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .footer-hp-fill {
+      height: 100%;
+      background: var(--hp-red);
+      animation: hp-drain 4s ease-in-out infinite alternate;
+    }
+
+    /* === ANIMATIONS === */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* === MOBILE === */
+    @media (max-width: 768px) {
+      nav { padding: 1rem 1.5rem; }
+      .nav-links { display: none; }
+      .hero-inner { grid-template-columns: 1fr; gap: 3rem; }
+      .about-grid { grid-template-columns: 1fr; gap: 2rem; }
+      .pillars-grid { grid-template-columns: 1fr; }
+      .tojii-inner { grid-template-columns: 1fr; gap: 2rem; }
+      .tojii-avatar-wrap { display: none; }
+      footer { flex-direction: column; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Scroll progress bar -->
+  <div class="hp-bg"><div class="hp-bg-fill" id="scrollHp"></div></div>
+
+  <!-- Floating particles -->
+  <div class="particles" id="particles"></div>
+
+  <!-- NAV -->
+  <nav>
+    <a href="#" class="logo-wrap">
+      <div class="logo-hp">
+        <div class="hp-bar-mini"><div class="hp-bar-mini-fill"></div></div>
+        <div class="hp-bar-mini" style="opacity:0.4;"><div class="hp-bar-mini-fill" style="animation-delay:-2s;"></div></div>
+      </div>
+      <div class="logo-text">Invisible<span>HP</span></div>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#about">Über uns</a></li>
+      <li><a href="#pillars">Community</a></li>
+      <li><a href="#tojii">MrTojii</a></li>
+      <li><a href="#links" class="nav-twitch">Twitch →</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-grid-bg"></div>
+    <div class="hero-orb orb1"></div>
+    <div class="hero-orb orb2"></div>
+
+    <div class="hero-inner">
+      <div class="hero-left">
+        <div class="hero-tag">Gaming ohne Limits</div>
+        <h1>
+          <span class="word-invisible">Invisible</span>
+          <span class="word-hp">HP.</span>
+        </h1>
+        <div class="title-hp-bar">
+          <div class="title-hp-track">
+            <div class="title-hp-fill"></div>
+          </div>
+          <span class="title-hp-label">Energie lädt sich auf</span>
+        </div>
+        <p class="hero-desc">
+          Eine Community für chronisch kranke, neurodivergente und psychisch eingeschränkte Gamer. Weil deine Lebensleiste unsichtbar ist – nicht leer.
+        </p>
+        <div class="hero-buttons">
+          <a href="#links" class="btn-red">Community beitreten</a>
+          <a href="#about" class="btn-outline">Mehr erfahren</a>
+        </div>
+      </div>
+
+      <div class="hero-right">
+        <div class="hp-card">
+          <div class="hp-card-title">// Spielerstatistik: Chronisch Krank</div>
+
+          <div class="hp-stat">
+            <div class="hp-stat-header">
+              <span class="hp-stat-name" style="color:var(--hp-red);">⚡ Tagesenergie</span>
+              <span class="hp-stat-val">30 / 100</span>
+            </div>
+            <div class="hp-track"><div class="hp-fill energy"></div></div>
+          </div>
+
+          <div class="hp-stat">
+            <div class="hp-stat-header">
+              <span class="hp-stat-name" style="color:var(--teal);">💚 Community</span>
+              <span class="hp-stat-val">78 / 100</span>
+            </div>
+            <div class="hp-track"><div class="hp-fill community"></div></div>
+          </div>
+
+          <div class="hp-stat">
+            <div class="hp-stat-header">
+              <span class="hp-stat-name" style="color:var(--gold);">🎮 Leidenschaft</span>
+              <span class="hp-stat-val">95 / 100</span>
+            </div>
+            <div class="hp-track"><div class="hp-fill passion"></div></div>
+          </div>
+
+          <div class="hp-stat">
+            <div class="hp-stat-header">
+              <span class="hp-stat-name" style="color:#a78bfa;">📚 Wissen</span>
+              <span class="hp-stat-val">85 / 100</span>
+            </div>
+            <div class="hp-track"><div class="hp-fill knowledge"></div></div>
+          </div>
+
+          <div class="hp-card-footer">
+            "Niedrige HP bedeutet nicht Game Over. Es bedeutet: <strong>mit Bedacht spielen.</strong>"
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section class="about" id="about">
+    <div class="section-eyebrow reveal">Was ist InvisibleHP?</div>
+    <h2 class="section-title reveal">Gaming gehört<br>uns allen.</h2>
+
+    <div class="about-grid">
+      <div class="about-text reveal">
+        <p>
+          Millionen von Menschen lieben Gaming – aber viele kämpfen gleichzeitig mit <strong>unsichtbaren Erkrankungen</strong>, die von außen niemand sieht. ME/CFS. MCAS. Autismus. ADHS. Depressionen. Chronische Schmerzen.
+        </p>
+        <p>
+          InvisibleHP ist der Ort wo diese Menschen <strong>willkommen sind</strong> – ohne sich erklären zu müssen. Wo ein kurzer Stream genauso viel wert ist wie ein langer. Wo schlechte Tage akzeptiert werden.
+        </p>
+        <p>
+          Wir verbinden Gaming mit Aufklärung. Wir zeigen: <strong>Pacing ist kein Versagen</strong> – es ist Strategie.
+        </p>
+      </div>
+
+      <div class="conditions-list reveal">
+        <div class="condition-item">
+          <div class="condition-dot" style="background:var(--hp-red);"></div>
+          <span class="condition-name">ME/CFS</span>
+          <span class="condition-desc">Myalgische Enzephalomyelitis</span>
+        </div>
+        <div class="condition-item">
+          <div class="condition-dot" style="background:#f97316;"></div>
+          <span class="condition-name">MCAS</span>
+          <span class="condition-desc">Mastzellaktivierungssyndrom</span>
+        </div>
+        <div class="condition-item">
+          <div class="condition-dot" style="background:#a78bfa;"></div>
+          <span class="condition-name">Autismus</span>
+          <span class="condition-desc">Neurodivergenz</span>
+        </div>
+        <div class="condition-item">
+          <div class="condition-dot" style="background:var(--teal);"></div>
+          <span class="condition-name">ADHS</span>
+          <span class="condition-desc">Aufmerksamkeitsdefizit</span>
+        </div>
+        <div class="condition-item">
+          <div class="condition-dot" style="background:var(--gold);"></div>
+          <span class="condition-name">& viele mehr</span>
+          <span class="condition-desc">Alle unsichtbaren Erkrankungen</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PILLARS -->
+  <section class="pillars" id="pillars">
+    <div class="pillars-inner">
+      <div class="section-eyebrow reveal">Was wir bieten</div>
+      <h2 class="section-title reveal">Drei Säulen.<br>Eine Community.</h2>
+
+      <div class="pillars-grid">
+        <div class="pillar-card red reveal">
+          <div class="pillar-number">01</div>
+          <h3 class="pillar-title">Aufklärung & Education</h3>
+          <p class="pillar-desc">Ehrlicher Educational Content über ME/CFS, MCAS, Autismus und mehr – verständlich erklärt, von Betroffenen für alle. Kein Fachjargon, keine Tabus.</p>
+        </div>
+        <div class="pillar-card teal reveal">
+          <div class="pillar-number">02</div>
+          <h3 class="pillar-title">Safe-Space Community</h3>
+          <p class="pillar-desc">Ein Ort wo schlechte Tage okay sind. Wo niemand fragt "aber du siehst doch gesund aus". Wo Pacing verstanden wird – weil es jeder kennt.</p>
+        </div>
+        <div class="pillar-card gold reveal">
+          <div class="pillar-number">03</div>
+          <h3 class="pillar-title">Gaming & Streaming Tipps</h3>
+          <p class="pillar-desc">Wie streamt man mit wenig Energie? Welche Spiele eignen sich? Welche Tools helfen? Praktische Ressourcen für Gamer mit Einschränkungen.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MISTER TOJII -->
+  <section class="tojii-section" id="tojii">
+    <div class="tojii-inner">
+      <div class="tojii-avatar-wrap reveal">
+        <div class="tojii-avatar-ring">
+          <div class="tojii-avatar-inner">🎮</div>
+        </div>
+      </div>
+
+      <div class="reveal">
+        <div class="section-eyebrow">Der Mensch dahinter</div>
+        <div class="tojii-name">MrTojii</div>
+        <div class="tojii-handle">twitch.tv/MrTojii</div>
+        <p class="tojii-bio">
+          "Ich lebe mit ME/CFS und MCAS – zwei chronischen Erkrankungen die man mir nicht ansieht. Gaming ist mein Ausweg, meine Freude und mein Weg um trotzdem Teil einer Welt zu sein. InvisibleHP ist das was ich mir selbst gewünscht hätte."
+        </p>
+        <div class="tojii-tags">
+          <span class="tag red">ME/CFS</span>
+          <span class="tag red">MCAS</span>
+          <span class="tag teal">Streamer</span>
+          <span class="tag teal">Moderator</span>
+          <span class="tag gold">Streamer.bot</span>
+          <span class="tag purple">Community Builder</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LINKS -->
+  <section class="links-section" id="links">
+    <div class="links-inner">
+      <div class="section-eyebrow reveal">Werde Teil der Community</div>
+      <h2 class="section-title reveal">Bereit?</h2>
+      <p class="reveal">Egal ob du selbst betroffen bist, jemanden kennst, oder einfach mehr verstehen möchtest – du bist willkommen.</p>
+
+      <div class="link-buttons reveal">
+        <a href="https://twitch.tv/MrTojii" target="_blank" class="link-btn twitch">
+          <div class="link-btn-icon">🟣</div>
+          Auf Twitch folgen – MrTojii
+          <span class="link-btn-arrow">→</span>
+        </a>
+        <a href="#" class="link-btn discord">
+          <div class="link-btn-icon">💬</div>
+          Discord Community beitreten
+          <span class="link-btn-arrow">→</span>
+        </a>
+        <a href="#" class="link-btn tiktok">
+          <div class="link-btn-icon">📱</div>
+          TikTok – Educational Content
+          <span class="link-btn-arrow">→</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-logo">Invisible<span>HP</span></div>
+    <div class="footer-text">Gaming ohne Limits. Für alle die kämpfen – sichtbar oder nicht. 💜</div>
+    <div class="footer-hp">
+      <span>HP</span>
+      <div class="footer-hp-bar"><div class="footer-hp-fill"></div></div>
+      <span>lädt nach</span>
+    </div>
+  </footer>
+
+  <script>
+    // Scroll progress HP bar
+    window.addEventListener('scroll', () => {
+      const scrolled = window.scrollY;
+      const total = document.body.scrollHeight - window.innerHeight;
+      const pct = (scrolled / total) * 100;
+      document.getElementById('scrollHp').style.width = pct + '%';
+    });
+
+    // Floating particles
+    const container = document.getElementById('particles');
+    for (let i = 0; i < 30; i++) {
+      const p = document.createElement('div');
+      p.className = 'particle';
+      p.style.left = Math.random() * 100 + '%';
+      p.style.bottom = '-10px';
+      p.style.width = p.style.height = (Math.random() * 3 + 1) + 'px';
+      p.style.animationDuration = (Math.random() * 15 + 10) + 's';
+      p.style.animationDelay = (Math.random() * 10) + 's';
+      const colors = ['#2dd4bf', '#e8354a', '#f0a500', '#a78bfa'];
+      p.style.background = colors[Math.floor(Math.random() * colors.length)];
+      container.appendChild(p);
+    }
+
+    // Scroll reveal
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach((e, i) => {
+        if (e.isIntersecting) {
+          setTimeout(() => e.target.classList.add('visible'), i * 100);
+        }
+      });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  </script>
+</body>
+</html>
