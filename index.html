@@ -14,7 +14,7 @@
       --hp-red: #e8354a;
       --hp-empty: #2a1a1e;
       --teal: #2dd4bf;
-      --gold: #f0a500;
+      --green: #09ff05;
       --text: #ede8f5;
       --muted: #7a7494;
       --border: rgba(255,255,255,0.07);
@@ -254,7 +254,7 @@
     }
     .title-hp-fill {
       height: 100%;
-      background: linear-gradient(90deg, var(--hp-red), var(--gold));
+      background: linear-gradient(90deg, var(--hp-red), var(--green));
       border-radius: 2px;
       animation: hp-drain-hero 5s ease-in-out infinite alternate;
     }
@@ -394,7 +394,7 @@
 
     .hp-fill.energy    { background: var(--hp-red); width: 30%; animation-delay: 0.5s; }
     .hp-fill.community { background: var(--teal); width: 78%; animation-delay: 0.7s; }
-    .hp-fill.passion   { background: var(--gold); width: 95%; animation-delay: 0.9s; }
+    .hp-fill.passion   { background: var(--green); width: 95%; animation-delay: 0.9s; }
     .hp-fill.knowledge { background: #a78bfa; width: 85%; animation-delay: 1.1s; }
 
     .hp-card-footer {
@@ -540,7 +540,7 @@
     .pillar-card:hover::after { opacity: 1; }
     .pillar-card.red::after { background: var(--hp-red); }
     .pillar-card.teal::after { background: var(--teal); }
-    .pillar-card.gold::after { background: var(--gold); }
+    .pillar-card.green::after { background: var(--green); }
 
     .pillar-number {
       font-family: 'Syne', sans-serif;
@@ -552,7 +552,7 @@
     }
     .pillar-card.red .pillar-number { color: var(--hp-red); }
     .pillar-card.teal .pillar-number { color: var(--teal); }
-    .pillar-card.gold .pillar-number { color: var(--gold); }
+    .pillar-card.green .pillar-number { color: var(--green); }
 
     .pillar-title {
       font-family: 'Syne', sans-serif;
@@ -656,7 +656,7 @@
     }
     .tag.red { color: var(--hp-red); border-color: rgba(232,53,74,0.3); background: rgba(232,53,74,0.06); }
     .tag.teal { color: var(--teal); border-color: rgba(45,212,191,0.3); background: rgba(45,212,191,0.06); }
-    .tag.gold { color: var(--gold); border-color: rgba(240,165,0,0.3); background: rgba(240,165,0,0.06); }
+    .tag.green { color: var(--green); border-color: rgba(9,255,5,0.3); background: rgba(9,255,5,0.06); }
     .tag.purple { color: #a78bfa; border-color: rgba(167,139,250,0.3); background: rgba(167,139,250,0.06); }
 
     /* === LINKS / CTA === */
@@ -882,7 +882,7 @@
 
           <div class="hp-stat">
             <div class="hp-stat-header">
-              <span class="hp-stat-name" style="color:var(--gold);">🎮 Leidenschaft</span>
+              <span class="hp-stat-name" style="color:var(--green);">🎮 Leidenschaft</span>
               <span class="hp-stat-val">95 / 100</span>
             </div>
             <div class="hp-track"><div class="hp-fill passion"></div></div>
@@ -947,7 +947,7 @@
           <span class="condition-desc">Aufmerksamkeitsdefizit</span>
         </div>
         <div class="condition-item">
-          <div class="condition-dot" style="background:var(--gold);"></div>
+          <div class="condition-dot" style="background:var(--green);"></div>
           <span class="condition-name">& viele mehr</span>
           <span class="condition-desc">Alle unsichtbaren Erkrankungen</span>
         </div>
@@ -972,7 +972,7 @@
           <h3 class="pillar-title">Safe-Space Community</h3>
           <p class="pillar-desc">Ein Ort wo schlechte Tage okay sind. Wo niemand fragt "aber du siehst doch gesund aus". Wo Pacing verstanden wird – weil es jeder kennt auf seine eigene Art und Weise.</p>
         </div>
-        <div class="pillar-card gold reveal">
+        <div class="pillar-card green reveal">
           <div class="pillar-number">03</div>
           <h3 class="pillar-title">Gaming & Streaming Tipps</h3>
           <p class="pillar-desc">Wie streamt man mit wenig Energie? Welche Spiele eignen sich? Welche Tools helfen? Praktische Ressourcen für Gamer mit Einschränkungen.</p>
@@ -981,13 +981,13 @@
     </div>
   </section>
 
-  <!-- MISTER TOJII -->
+  <!-- MISTER TOJII -->       <!-- HIER WEITER MACHEN !!!! IST NOCH NICHT SO WIE ICH ES MIR VORSTELLE !!!! -->
   <section class="tojii-section" id="tojii">
     <div class="tojii-inner">
       <div class="tojii-avatar-wrap reveal">
         <div class="tojii-avatar-ring">
           <div class="tojii-avatar-inner">
-            <img src="tojii-wave300.png" style="width:300px; height:300px; border-radius:50%; object-fit:cover;"/>
+            <img src="tojii-wave300.png" style="width:300px; height:300px; border-radius:50%; object-fit:cover;"/> 
           </div>
         </div>
       </div>
@@ -1004,7 +1004,7 @@
           <span class="tag red">MCAS</span>
           <span class="tag teal">Streamer</span>
           <span class="tag teal">Moderator</span>
-          <span class="tag gold">Streamer.bot</span>
+          <span class="tag green">Streamer.bot</span>
           <span class="tag purple">Community Builder</span>
         </div>
       </div>
@@ -1024,12 +1024,12 @@
           Auf Twitch folgen – MrTojii
           <span class="link-btn-arrow">→</span>
         </a>
-        <a href="#" class="link-btn discord">
+        <a href="https://discord.gg/PsVJG4MA" target="_blank" class="link-btn discord">
           <div class="link-btn-icon">💬</div>
           Discord Community beitreten
           <span class="link-btn-arrow">→</span>
         </a>
-        <a href="#" class="link-btn tiktok">
+        <a href="https://tiktok.com/@invishptojii" target="_blank" class="link-btn tiktok">
           <div class="link-btn-icon">📱</div>
           TikTok – Educational Content
           <span class="link-btn-arrow">→</span>
