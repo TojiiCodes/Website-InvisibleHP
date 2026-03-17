@@ -610,6 +610,14 @@
 
     .tojii-avatar-wrap {
       position: relative;
+      max-width: 300px;
+      width: 100%;
+    }
+    .tojii-avatar-wrap img {
+      width: 100%;
+      max-width: 300px;
+      height: auto;
+      display: block;
     }
     .tojii-avatar-ring {
       width: 220px; height: 220px;
@@ -1097,13 +1105,15 @@
 
     /* === MOBILE === */
     @media (max-width: 768px) {
-      nav { padding: 1rem 1.5rem; }
+      nav { padding: 1rem 1rem; }
       .nav-links { display: none; }
+      .hero { padding: 6rem 1rem 3rem; }
       .hero-inner { grid-template-columns: 1fr; gap: 3rem; }
       .about-grid { grid-template-columns: 1fr; gap: 2rem; }
       .pillars-grid { grid-template-columns: 1fr; }
       .tojii-inner { grid-template-columns: 1fr; gap: 2rem; }
-      .tojii-avatar-wrap { display: none; }
+      .tojii-avatar-wrap { width: 100%; max-width: 260px; margin: 0 auto; }
+      .tojii-avatar-wrap img { max-width: 100%; height: auto; }
       footer { flex-direction: column; text-align: center; }
     }
   </style>
